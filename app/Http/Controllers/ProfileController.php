@@ -8,9 +8,31 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use RateLimiter;
 
 class ProfileController extends Controller
 {
+    
+    public function formLogin(Request $request)
+    {
+        $key = 'login.'.$request->ip();
+        return view('login',[
+            'key'=>$key,
+            'retries'=>RateLimiter::retriesLeft($key, 3),
+            'seconds'=>RateLimiter::availableIn($key),
+        ]);
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([    
+            'email'=>'required|email',
+            'password'=>'required',
+        ]);
+        RateLimiter::clear( 'login.'.$request->ip() );
+        return "Success Login"; 
+    }
+    
     /**
      * Display the user's profile form.
      */

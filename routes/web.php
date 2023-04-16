@@ -4,31 +4,32 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // routes/web.php
-use App\Http\Middleware\Fail2Ban;
-use Illuminate\Support\Facades\Auth;
 
-Route::middleware([App\Http\Middleware\Fail2Ban::class])->group(function () {
-    Route::get('/login', function () {
-        return view('auth.login');
-    })->name('login');
+// use App\Http\Middleware\Fail2Ban;
+// use Illuminate\Support\Facades\Auth;
 
-    Route::post('/login', function (Illuminate\Http\Request $request) {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+// Route::middleware([Fail2Ban::class])->group(function () {
+//     Route::get('/login', function () {
+//         return view('auth.login');
+//     })->name('login');
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+//     Route::post('/login', function (Illuminate\Http\Request $request) {
+//         $credentials = $request->validate([
+//             'email' => 'required|email',
+//             'password' => 'required',
+//         ]);
 
-            return redirect()->intended('/');
-        }
+//         if (Auth::attempt($credentials)) {
+//             $request->session()->regenerate();
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ]);
-    });
-});
+//             return redirect()->intended('/');
+//         }
+
+//         return back()->withErrors([
+//             'email' => 'Email atau password salah.',
+//         ]);
+//     });
+// });
 
 
 /*
@@ -54,6 +55,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::group(['namespace'=>'\App\\Http\\Controllers'], function (){
+    Route::get('login','LoginController@formLogin');
+    Route::post('login','LoginController@login')->middleware('throttle:login');
 });
 
 require __DIR__.'/auth.php';
