@@ -4,34 +4,31 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // routes/web.php
-
-// hahaha
-
 use App\Http\Middleware\Fail2Ban;
 use Illuminate\Support\Facades\Auth;
 
-// Route::middleware([Fail2Ban::class])->group(function () {
-//     Route::get('/login', function () {
-//         return view('auth.login');
-//     })->name('login');
+Route::middleware([App\Http\Middleware\Fail2Ban::class])->group(function () {
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
 
-//     Route::post('/login', function (Illuminate\Http\Request $request) {
-//         $credentials = $request->validate([
-//             'email' => 'required|email',
-//             'password' => 'required',
-//         ]);
+    Route::post('/login', function (Illuminate\Http\Request $request) {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-//         if (Auth::attempt($credentials)) {
-//             $request->session()->regenerate();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-//             return redirect()->intended('/');
-//         }
+            return redirect()->intended('/');
+        }
 
-//         return back()->withErrors([
-//             'email' => 'Email atau password salah.',
-//         ]);
-//     });
-// });
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ]);
+    });
+});
 
 
 /*
