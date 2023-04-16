@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 // routes/web.php
 
+// hahaha
+
 use App\Http\Middleware\Fail2Ban;
 use Illuminate\Support\Facades\Auth;
 
